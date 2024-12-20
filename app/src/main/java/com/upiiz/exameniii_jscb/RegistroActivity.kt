@@ -2,6 +2,7 @@ package com.upiiz.exameniii_jscb
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -25,7 +26,6 @@ class RegistroActivity : AppCompatActivity() {
     private lateinit var reference: DatabaseReference
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -39,14 +39,14 @@ class RegistroActivity : AppCompatActivity() {
         supportActionBar?.hide()
         InicializarVariables()
 
-        Btn_registrar.setOnClickListener{
+        Btn_registrar.setOnClickListener {
             ValidarDatos()
         }
 
     }
 
 
-    private fun InicializarVariables(){
+    private fun InicializarVariables() {
         R_Et_nombre_usuario = findViewById(R.id.R_Et_nombre_usuario)
         R_Et_correo = findViewById(R.id.R_Et_correo)
         R_Et_contrasena = findViewById(R.id.R_Et_contrasena)
@@ -63,24 +63,21 @@ class RegistroActivity : AppCompatActivity() {
         val contrasena: String = R_Et_contrasena.text.toString()
         val confirmar_contrasena: String = R_Et_confirmar_contrasena.text.toString()
 
-        if(nombre_usuario.isEmpty()){
-            Toast.makeText(applicationContext, "Ingrese un nombre de usuario", Toast.LENGTH_SHORT).show()
-        }
-        else if(correo.isEmpty()){
+        if (nombre_usuario.isEmpty()) {
+            Toast.makeText(applicationContext, "Ingrese un nombre de usuario", Toast.LENGTH_SHORT)
+                .show()
+        } else if (correo.isEmpty()) {
             Toast.makeText(applicationContext, "Ingrese un correo", Toast.LENGTH_SHORT).show()
-        }
-        else if(contrasena.isEmpty()){
+        } else if (contrasena.isEmpty()) {
             Toast.makeText(applicationContext, "Ingrese una contraseña", Toast.LENGTH_SHORT).show()
-        }
-        else if(confirmar_contrasena.isEmpty()){
+        } else if (confirmar_contrasena.isEmpty()) {
             Toast.makeText(applicationContext, "Confirme su contraseña", Toast.LENGTH_SHORT).show()
-        }
-        else if(contrasena != confirmar_contrasena){
-            Toast.makeText(applicationContext, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
-        }
-        else{
+        } else if (contrasena != confirmar_contrasena) {
+            Toast.makeText(applicationContext, "Las contraseñas no coinciden", Toast.LENGTH_SHORT)
+                .show()
+        } else {
             RegistrarUsuario(correo, contrasena)
-         }
+        }
     }
 
     private fun RegistrarUsuario(correo: String, contrasena: String) {
@@ -104,18 +101,18 @@ class RegistroActivity : AppCompatActivity() {
 
                     reference.updateChildren(hashmap)
                         .addOnCompleteListener { task2 ->
-                        if (task2.isSuccessful) {
-                            val intent = Intent(this, MainActivity::class.java)
-                            Toast.makeText(
-                                applicationContext,
-                                "Registro exitoso",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            startActivity(intent)
-                            finish()
+                            if (task2.isSuccessful) {
+                                val intent = Intent(this, MainActivity::class.java)
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Registro exitoso",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                startActivity(intent)
+                                finish()
 
+                            }
                         }
-                    }
                         .addOnFailureListener { e ->
                             Toast.makeText(applicationContext, "${e.message}", Toast.LENGTH_SHORT)
                                 .show()
@@ -126,10 +123,12 @@ class RegistroActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(applicationContext, "Error al registrar", Toast.LENGTH_SHORT)
                         .show()
+                    Log.d("ERROR", task.exception.toString())
                 }
 
             }.addOnFailureListener { e ->
                 Toast.makeText(applicationContext, "${e.message}", Toast.LENGTH_SHORT).show()
+                Log.d("ERROR", e.message.toString())
             }
 
     }

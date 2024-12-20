@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "962142317371",
-    "project_id": "chatapp-713de",
-    "storage_bucket": "chatapp-713de.firebasestorage.app"
+    "project_number": "6753125473",
+    "project_id": "exameniiichat",
+    "storage_bucket": "exameniiichat.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:962142317371:android:0103d7a6834e9dc89ee51e",
+        "mobilesdk_app_id": "1:6753125473:android:2d133ca4d1d87533549620",
         "android_client_info": {
           "package_name": "com.upiiz.exameniii_jscb"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBjVJEn76-YdatHJ1lO_K7w_iiSYx8myis"
+          "current_key": "AIzaSyD4MmsS5jFEL_STbKbhMLkE5njoxbmkI8c"
         }
       ],
       "services": {

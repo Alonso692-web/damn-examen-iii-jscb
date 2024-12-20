@@ -63,14 +63,14 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val intent = Intent(this, MainActivity::class.java)
-                    Toast.makeText(applicationContext, "Inicio de sesion", Toast.LENGTH_SHORT)
+                    Toast.makeText(applicationContext, "Inicio de sesión", Toast.LENGTH_SHORT)
                         .show()
                     startActivity(intent)
                     finish()
                 } else {
                     Toast.makeText(
                         applicationContext,
-                        "Correo o contraseña inválidos",
+                        "Correo/contraseña inválidos",
                         Toast.LENGTH_SHORT
                     ).show()
                 }

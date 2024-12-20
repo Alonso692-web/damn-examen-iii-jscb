@@ -3,6 +3,7 @@ package com.upiiz.exameniii_jscb
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -130,6 +131,7 @@ class MainActivity : AppCompatActivity() {
             intent.type = "image/*"
             intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
             startActivityForResult(Intent.createChooser(intent, "Mandar Imagen"), 1)
+            Log.d("MainActivity", "Intent enviado")
         }
 
 
@@ -138,7 +140,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        supportActionBar?.title = "Chats"
+        supportActionBar?.title = "Bienvenido"
         //supportActionBar?.hide()
     }
 
@@ -149,6 +151,35 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendMessage() {
+        val messageText = et_mensaje.text.toString().trim()
+        if (messageText.isEmpty()) return
+
+        val currentUser = auth.currentUser ?: return
+        val messageId = databaseReference.push().key ?: return
+
+        // Create message object
+        val message = Message(
+            mensaje = messageText,
+            nombre = currentUser.displayName ?: currentUser.email ?: "Usuario",
+            hora = formattedTime,
+            type_mensaje = "text"
+
+        )
+
+        // Send message to Firebase
+        databaseReference.child(messageId).setValue(message)
+            .addOnSuccessListener {
+                et_mensaje.text.clear()
+                scrollToBottom()
+                // Send push notification
+                sendPushNotification(message)
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Error al enviar mensaje", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    /*private fun sendMessage() {
         val messageText = et_mensaje.text.toString().trim()
         if (messageText.isEmpty()) return
 
@@ -175,8 +206,9 @@ class MainActivity : AppCompatActivity() {
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Error al enviar mensaje", Toast.LENGTH_SHORT).show()
+                Log.d("MainActivity", "Error al enviar mensaje", it)
             }
-    }
+    }*/
 
     private fun sendPushNotification(message: Message) {
         // You'll need a server or cloud function to send FCM messages
@@ -217,8 +249,42 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+            val imageUri = data.data
+            if (imageUri != null) {
+                val filename = "${auth.currentUser!!.uid}/${formattedTime}"
+                storageReference.child(filename).putFile(imageUri)
+                    .addOnSuccessListener {
+                        Log.d("Firebase Storage", "Imagen subida exitosamente")
+                        it.storage.downloadUrl.addOnSuccessListener { uri ->
+                            Log.d("Firebase Storage", "URL de la imagen: $uri")
+                            val message = Message(
+                                mensaje = "Foto",
+                                nombre = auth.currentUser?.email ?: "Usuario",
+                                foto = uri.toString(),
+                                type_mensaje = "image",
+                                hora = formattedTime
+                            )
+                            databaseReference.push().setValue(message)
+                        }
+                            .addOnFailureListener { e ->
+                                Log.d(
+                                    "Firebase Storage",
+                                    "Error al obtener la URL de la imagen: ${e.message}"
+                                )
+                            }
+                    }
+                    .addOnFailureListener { e ->
+                        Log.d("Firebase Storage", "Error al subir imagen: ${e.message}")
+                    }
+            }
+        }
+    }
+
+
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             val imageUri = data.data
@@ -236,10 +302,8 @@ class MainActivity : AppCompatActivity() {
                     }
 
                 }
-
-
         }
-    }
+    }*/
 
     private fun saveTokenToDatabase(token: String) {
         val currentUser = FirebaseAuth.getInstance().currentUser
@@ -264,7 +328,7 @@ class MainActivity : AppCompatActivity() {
             R.id.menu_salir -> {
                 FirebaseAuth.getInstance().signOut()
                 val intent = Intent(this, Inicio::class.java)
-                Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show()
                 startActivity(intent)
                 finish()
                 true
