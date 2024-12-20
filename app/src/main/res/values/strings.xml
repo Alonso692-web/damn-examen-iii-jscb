@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Chat-APP</string>
+    <string name="nombre_desarrollador">Sebastian Colin</string>
+
+    <string name="Btn_ir_registros">Registrarme</string>"
+    <string name="Btn_ir_login">Ingresar</string>"
+
+    <string name="R_Et_nombre_usuario">Nombre de usuario</string>
+    <string name="R_Et_correo">Correo</string>"
+    <string name="R_Et_contrasena">Contraseña</string>"
+    <string name="R_Et_confirmar_contrasena">Confirmar Contraseña</string>
+    <string name="Btn_registrar">Registrar</string>
+
+    <string name="menu_salir">Cerrar Sesión</string>
+
+    <string name="L_Et_correo">Correo Electrónico</string>
+    <string name="L_Et_contrasena">Contraseña</string>
+    <string name="Btn_ingresar">Ingresar</string>
+    <string name="etiqueta_creditos_nombre">Alonso Domínguez López</string>
+    <string name="etiqueta_creditos_grupo">7CM1</string>
+    <string name="etiqueta_creditos_correo">adominguezl2100@alumno.ipn.mx</string>
+    <string name="etiqueta_creditos_boton_regresar">Regresar</string>
+
+
+</resources>
